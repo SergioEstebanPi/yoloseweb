@@ -2,7 +2,7 @@
   <div id="todo-list" class="container">
     <div class="row">
       <div class="col-md-6 mx-auto">
-        <h1 class="text-center">TODO List App</h1>
+        <h1 class="text-center">Listado de tareas</h1>
         <form v-on:submit.prevent="addNewTask">
           <label for="tasknameinput">Task Name</label>
           <input v-model="taskname" type="text" id="tasknameinput" class="form-control">

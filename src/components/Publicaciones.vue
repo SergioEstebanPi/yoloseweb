@@ -1,6 +1,5 @@
 <template>
   <div id="todo-list2" class="container">
-    <h1>Publicaciones</h1>
     <div class="row">
       <div class="col-md-6 mx-auto">
         <h1 class="text-center">Listado de Publicaciones</h1>

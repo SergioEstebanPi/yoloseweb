@@ -6,7 +6,7 @@
         <router-link to='/login'>Login</router-link>
     </nav>
     <router-view/>
-    <img src="./assets/logo.png">
+    <!-- <img src="./assets/logo.png"> -->
   </div>
 </template>
 
