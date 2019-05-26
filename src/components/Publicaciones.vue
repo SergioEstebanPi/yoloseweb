@@ -1,9 +1,8 @@
 <template>
   <v-container>
-
-  <div>
+    <h1 class="display-1 text-xs-center">Mis publicaciones</h1>
     <v-toolbar flat color="white">
-      <v-toolbar-title>My CRUD</v-toolbar-title>
+      <v-toolbar-title>Publicaciones</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -12,7 +11,7 @@
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="500px">
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+          <v-btn color="primary" dark class="mb-2" v-on="on">Crear</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -23,7 +22,7 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                  <v-text-field v-model="editedItem.title" label="Titulo"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
@@ -43,23 +42,23 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+            <v-btn color="blue darken-1" flat @click="close">Cancelar</v-btn>
+            <v-btn color="blue darken-1" flat @click="save">Guardar</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-toolbar>
     <v-data-table
       :headers="headers"
-      :items="desserts"
+      :items="publicaciones"
       class="elevation-1"
     >
       <template v-slot:items="props">
-        <td>{{ props.item.name }}</td>
-        <td class="text-xs-right">{{ props.item.calories }}</td>
+        <td>{{ props.item.title }}</td>
+        <td class="text-xs-right">{{ props.item.title }}</td>
         <td class="text-xs-right">{{ props.item.fat }}</td>
-        <td class="text-xs-right">{{ props.item.carbs }}</td>
-        <td class="text-xs-right">{{ props.item.protein }}</td>
+        <td class="text-xs-right">{{ props.item.created_at }}</td>
+        <td class="text-xs-right">{{ props.item.updated_at }}</td>
         <td class="justify-center layout px-0">
           <v-icon
             small
@@ -77,78 +76,9 @@
         </td>
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
+        <v-btn color="primary" @click="initialize">Actualizar</v-btn>
       </template>
     </v-data-table>
-  </div>
-
-    <h1 class="display-1 text-xs-center">Mis publicaciones</h1>
-    <v-layout wrap>
-      <v-flex v-for="publicacion in publicaciones"
-              :key="publicacion.title"
-              v-bind="{ [`xs${publicacion.flex}`]: true }" mt-5>
-        <v-card>
-          <v-img
-            :src="publicacion.src"
-            height="200px"
-          >
-            <v-container
-              fill-height
-              fluid
-              pa-2
-            >
-              <v-layout fill-height>
-                <v-flex xs12 align-end flexbox>
-                  <span class="headline" v-text="publicacion.title"></span> <!-- white--text -->
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-img>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn icon>
-              <v-icon>favorite</v-icon>
-            </v-btn>
-            <v-btn icon>
-              <v-icon>bookmark</v-icon>
-            </v-btn>
-            <v-btn icon>
-              <v-icon>share</v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-flex>
-    </v-layout>
-
-    <v-layout>
-      <v-flex>
-        <div id="todo-list2" class="container">
-          <div class="row">
-            <div class="col-md-6 mx-auto">
-              <h1 class="text-center">Listado de Publicaciones</h1>
-              <form v-on:submit.prevent="addNewTask">
-                <label for="tasknameinput">Publicacion</label>
-                <input v-model="taskname" type="text" id="tasknameinput" class="form-control">
-                <button v-if="this.isEdit == false" type="submit" class="btn btn-success btn-block mt-3">Agregar</button>
-                <button v-else type="button" v-on:click="updateTask()" class="btn btn-primary btn-block mt-3">Editar</button>
-              </form>
-            </div>
-          </div>
-
-          <table class="table">
-            <tr v-for="(todo) in publicaciones" v-bind:key="todo.id" v-bind:title="todo.title">
-              <td class="text-left">{{todo.title}}</td>
-              <td class="text-right">
-                <button v-on:click="editTask(todo.title, todo.id)" class="btn btn-info">Editar</button>
-                <button v-on:click="deleteTask(todo.id)" class="btn btn-danger">Borrar</button>
-              </td>
-            </tr>
-          </table>
-
-        </div>
-      </v-flex>
-    </v-layout>
   </v-container>
 </template>
 
@@ -159,17 +89,11 @@ export default {
   name: 'Publicaciones',
   data () {
     return {
-      publicaciones: [
-        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
-        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
-        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 }
-      ],
-      taskname: '',
-      isEdit: false,
+      publicaciones: [],
       dialog: false,
       headers: [
         {
-          text: 'Dessert (100g serving)',
+          text: 'Titulo',
           align: 'left',
           sortable: false,
           value: 'name'
@@ -180,17 +104,18 @@ export default {
         { text: 'Protein (g)', value: 'protein' },
         { text: 'Actions', value: 'name', sortable: false }
       ],
-      desserts: [],
       editedIndex: -1,
       editedItem: {
-        name: '',
+        id: '',
+        title: '',
         calories: 0,
         fat: 0,
         carbs: 0,
         protein: 0
       },
       defaultItem: {
-        name: '',
+        id: '',
+        title: '',
         calories: 0,
         fat: 0,
         carbs: 0,
@@ -202,123 +127,22 @@ export default {
   },
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? 'Nueva Publicación' : 'Editar Publicación'
     }
   },
-
   watch: {
     dialog (val) {
       val || this.close()
     }
   },
-
   created () {
     this.initialize()
-    this.getTask()
   },
   methods: {
     initialize () {
-      this.desserts = [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7
-        }
-      ]
+      this.getPublications()
     },
-    editItem (item) {
-      this.editedIndex = this.desserts.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
-    },
-
-    deleteItem (item) {
-      const index = this.desserts.indexOf(item)
-      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
-    },
-
-    close () {
-      this.dialog = false
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      }, 300)
-    },
-
-    save () {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-      } else {
-        this.desserts.push(this.editedItem)
-      }
-      this.close()
-    },
-    getTask () {
+    getPublications () {
       axios({
         method: 'GET',
         url: '/api/tareas'
@@ -332,51 +156,18 @@ export default {
         }
       )
     },
-    addNewTask () {
-      axios.post('/api/tareas', {
-        title: this.taskname
-      }).then(
-        res => {
-          this.taskname = ''
-          this.getTask()
-          console.log(res)
-        }
-      ).catch(
-        err => {
-          console.log(err)
-        }
-      )
+    editItem (item) {
+      this.editedIndex = this.publicaciones.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
     },
-    editTask (title, id) {
-      this.id = id
-      this.taskname = title
-      this.isEdit = true
-    },
-    updateTask () {
-      axios.put(`/api/tareas/${this.id}`,
-        {
-          title: this.taskname
-        }
-      ).then(
-        res => {
-          this.taskname = ''
-          this.isEdit = false
-          this.getTask()
-          console.log(res)
-        }
-      ).catch(
-        err => {
-          console.log(err)
-        }
-      )
-    },
-    deleteTask (id) {
+    deleteItem (item) {
+      confirm('Seguro que desea eliminar esta publicación?') &&
       axios.delete(
-        `/api/tareas/${id}`
+        `/api/tareas/${item.id}`
       ).then(
         res => {
-          this.taskname = ''
-          this.getTask()
+          this.getPublications()
           console.log(res)
         }
       ).catch(
@@ -384,6 +175,46 @@ export default {
           console.log(err)
         }
       )
+    },
+    close () {
+      this.dialog = false
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      }, 300)
+    },
+    save () {
+      if (this.editedIndex > -1) {
+        axios.put(`/api/tareas/${this.editedItem.id}`,
+          {
+            title: this.editedItem.title
+          }
+        ).then(
+          res => {
+            this.isEdit = false
+            this.getPublications()
+            console.log(res)
+          }
+        ).catch(
+          err => {
+            console.log(err)
+          }
+        )
+      } else {
+        axios.post('/api/tareas', {
+          title: this.editedItem.title
+        }).then(
+          res => {
+            this.getPublications()
+            console.log(res)
+          }
+        ).catch(
+          err => {
+            console.log(err)
+          }
+        )
+      }
+      this.close()
     }
   }
 }
